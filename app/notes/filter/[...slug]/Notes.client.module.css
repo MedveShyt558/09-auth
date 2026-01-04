@@ -1,0 +1,32 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.button {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    background-color: #3b82f6;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.button:hover {
+    background-color: #2563eb;
+}
+
+.status {
+    padding: 12px;
+    text-align: center;
+    color: #666;
+}
