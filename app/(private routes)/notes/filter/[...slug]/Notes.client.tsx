@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api/clientApi";
 import NotesList from "@/components/NoteList/NoteList";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
@@ -30,7 +30,7 @@ export default function NotesClient({ tag }: Props) {
 
   const debouncedSearch = useDebouncedValue(search, 400);
 
-  const perPage = 20;
+  const perPage = 12;
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", { page, perPage, search: debouncedSearch, tag }],
