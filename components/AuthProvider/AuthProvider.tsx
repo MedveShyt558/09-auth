@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { checkSession, logout } from "@/lib/api/clientApi";
+import { checkSession } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 
 type Props = {
@@ -14,52 +14,44 @@ const PRIVATE_PREFIXES = ["/profile", "/notes"];
 const AuthProvider = ({ children }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, setUser, clearIsAuthenticated } = useAuthStore();
-  const [isLoading, setIsLoading] = useState(true);
+  const { setUser, clearIsAuthenticated } = useAuthStore();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const isPrivate = PRIVATE_PREFIXES.some((p) => pathname.startsWith(p));
 
     const run = async () => {
-      setIsLoading(true);
       try {
         const user = await checkSession();
+
         if (user) {
           setUser(user);
-          setIsLoading(false);
+          setLoading(false);
           return;
         }
 
         clearIsAuthenticated();
 
         if (isPrivate) {
-          await logout();
           router.push("/sign-in");
-          setIsLoading(false);
-          return;
         }
 
-        setIsLoading(false);
+        setLoading(false);
       } catch {
         clearIsAuthenticated();
 
-        if (isPrivate || isAuthenticated) {
-          try {
-            await logout();
-          } catch {}
+        if (isPrivate) {
           router.push("/sign-in");
         }
 
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     run();
-  }, [pathname, router, setUser, clearIsAuthenticated, isAuthenticated]);
+  }, [pathname, router, setUser, clearIsAuthenticated]);
 
-  if (isLoading) {
-    return null;
-  }
+  if (loading) return null;
 
   return <>{children}</>;
 };
