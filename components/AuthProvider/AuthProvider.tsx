@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { checkSession } from "@/lib/api/clientApi";
+import { checkSession, getMe } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 
 type Props = {
@@ -22,9 +22,10 @@ const AuthProvider = ({ children }: Props) => {
 
     const run = async () => {
       try {
-        const user = await checkSession();
+        const hasSession = await checkSession();
 
-        if (user) {
+        if (hasSession) {
+          const user = await getMe();
           setUser(user);
           setLoading(false);
           return;

@@ -26,9 +26,9 @@ const EditProfilePage = () => {
     run();
   }, []);
 
-  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const user = await updateMe({ username });
+  const handleSave = async (formData: FormData) => {
+    const nextUsername = String(formData.get("username") ?? "").trim();
+    const user = await updateMe({ username: nextUsername });
     setUser(user);
     router.push("/profile");
   };
@@ -50,19 +50,23 @@ const EditProfilePage = () => {
           className={css.avatar}
         />
 
-        <form className={css.profileInfo} onSubmit={handleSave}>
+        <form className={css.profileInfo} action={handleSave}>
           <div className={css.usernameWrapper}>
             <label htmlFor="username">Username:</label>
             <input
               id="username"
               type="text"
+              name="username"
               className={css.input}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
-          <p>Email: {email}</p>
+          <div className={css.usernameWrapper}>
+            <label htmlFor="email">Email:</label>
+            <input id="email" type="email" className={css.input} value={email} readOnly />
+          </div>
 
           <div className={css.actions}>
             <button type="submit" className={css.saveButton}>
